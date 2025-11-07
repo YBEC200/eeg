@@ -18,6 +18,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 10000
 
 # Inicia solo FastAPI/uvicorn para descartar problemas de Ollama
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "${PORT:-10000}"]
+CMD sh -c 'uvicorn server:app --host 0.0.0.0 --port ${PORT:-10000}'
 # Reemplaza "CDT" y "Modelfile" con el nombre y archivo de tu modelo Ollama
 
