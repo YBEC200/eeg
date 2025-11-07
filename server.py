@@ -1,8 +1,18 @@
 from fastapi import FastAPI, Request
 import subprocess, requests, os, threading, time
+from fastapi.middleware.cors import CORSMiddleware
+import requests
 
 app = FastAPI()
 
+# 🔧 Habilitar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # puedes poner tu dominio HTML aquí en lugar de *
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # 1️⃣ Inicia el servidor Ollama en segundo plano
 def start_ollama():
     subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -21,5 +31,13 @@ def root():
 @app.post("/generate")
 async def generate(request: Request):
     data = await request.json()
-    response = requests.post("http://localhost:11434/api/generate", json=data)
-    return response.json()
+    model = data.get("model", "CDT")
+    prompt = data.get("prompt", "")
+    
+    response = requests.post(
+        "http://127.0.0.1:11434/api/generate",
+        json={"model": model, "prompt": prompt},
+        stream=False
+    )
+    
+    return {"response": response.json().get("response", "")}
