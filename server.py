@@ -51,6 +51,7 @@ async def generate(request: Request):
             timeout=120
         )
         # r.json() debe contener la clave "response" según cómo Ollama devuelva el resultado
+        print("Ollama response:", r.text)  # <-- agrega esto para ver la respuesta en logs
         j = r.json()
         text = j.get("response") or j.get("output") or str(j)
         return {"response": text}
