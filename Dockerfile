@@ -18,5 +18,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 10000
 
 # Inicia Ollama + tu API
-CMD ollama serve & sleep 5 && ollama create CDT -f Modelfile && uvicorn server:app --host 0.0.0.0 --port 10000
+CMD ["sh", "-lc", "ollama serve & sleep 5 && ollama create CDT -f Modelfile && uvicorn server:app --host 0.0.0.0 --port ${PORT:-10000}"]
+# Reemplaza "CDT" y "Modelfile" con el nombre y archivo de tu modelo Ollama
 
